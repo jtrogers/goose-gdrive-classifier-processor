@@ -1,0 +1,73 @@
+name: gdrive-classifier-processor
+version: 1.0.0
+description: MCP processor for Google Drive document classification using LLMs
+author: jtrogers
+license: MIT
+
+type: mcp
+mcp_server:
+  command: python mcp_server.py
+  port: 0
+  environment:
+    PYTHONPATH: ${EXTENSION_DIR}
+
+dependencies:
+  - python3
+
+config:
+  schema:
+    type: object
+    properties:
+      rubric_path:
+        type: string
+        description: Path to classification rubric JSON file
+      confidence_thresholds:
+        type: object
+        properties:
+          high:
+            type: integer
+            minimum: 0
+            maximum: 100
+            default: 90
+          medium:
+            type: integer
+            minimum: 0
+            maximum: 100
+            default: 70
+          low:
+            type: integer
+            minimum: 0
+            maximum: 100
+            default: 0
+      batch_size:
+        type: integer
+        minimum: 1
+        default: 10
+      processing:
+        type: object
+        properties:
+          max_retries:
+            type: integer
+            minimum: 0
+            default: 3
+          timeout_seconds:
+            type: integer
+            minimum: 1
+            default: 300
+      llm:
+        type: object
+        properties:
+          model:
+            type: string
+            default: "gpt-4-turbo-preview"
+          temperature:
+            type: number
+            minimum: 0
+            maximum: 2
+            default: 0.3
+          max_tokens:
+            type: integer
+            minimum: 1
+            default: 1000
+    required:
+      - rubric_path
